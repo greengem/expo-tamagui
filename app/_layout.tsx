@@ -2,6 +2,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { SplashScreen, Stack } from 'expo-router'
 import { useColorScheme } from 'react-native'
 import { TamaguiProvider } from 'tamagui'
+import { initDB } from './services/database'
 
 import '../tamagui-web.css'
 
@@ -27,6 +28,16 @@ export default function RootLayout() {
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
   })
+
+  useEffect(() => {
+    initDB((error) => {
+      if (error) {
+        console.error("Error initializing database:", error);
+      } else {
+        console.log("Database initialized successfully");
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (interLoaded || interError) {
