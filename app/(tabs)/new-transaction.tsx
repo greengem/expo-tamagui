@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet,  } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { useAddPurchase } from '../store';
-import { ScrollView, Input, Button, Text, YStack } from 'tamagui'
+import { ScrollView, Input, Button, Text, YStack } from 'tamagui';
+import { addPurchase } from '../services/database';
 
 interface FormData {
   amount: string;
@@ -17,21 +17,22 @@ export default function TabNewTransactionScreen() {
 
   const amountInputRef = useRef<Input>(null);
 
-  const addPurchase = useAddPurchase();
-  
-
   const onSubmit = (data: FormData) => {
-    addPurchase(Number(data.amount), data.category, date.toISOString(), data.note);
-    reset({
-      amount: '',
-      category: '',
-      note: ''
-    });
-    setDate(new Date());
+    // Call the addPurchase function from the database file
+    addPurchase(Number(data.amount), data.category, date.toISOString(), data.note, (error) => {
+      if (!error) {
+        reset({
+          amount: '',
+          category: '',
+          note: ''
+        });
+        setDate(new Date());
 
-    if (amountInputRef.current) {
-      amountInputRef.current.focus();
-    }
+        if (amountInputRef.current) {
+          amountInputRef.current.focus();
+        }
+      }
+    });
   };
 
   const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
