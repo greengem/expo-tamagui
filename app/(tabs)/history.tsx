@@ -14,14 +14,16 @@ export default function TabHistoryScreen() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
-    fetchPurchases((error, result) => {
+    fetchPurchases((error, result: Transaction[] | undefined) => {
       if (error) {
         console.error("Error fetching purchases:", error);
       } else {
-        setTransactions(result);
+        if (result) {
+          setTransactions(result);
+        }
       }
     });
-  }, []);
+  }, []);  
 
   return (
     <ScrollView padding="$3">
@@ -37,7 +39,7 @@ export default function TabHistoryScreen() {
               </YStack>
             </Card.Header>
             <Card.Footer padded>
-              <Button onPress={() => deletePurchase(transaction.id)}>Delete Transaction</Button>
+              <Button>Delete Transaction</Button>
             </Card.Footer>
           </Card>
         ))}
